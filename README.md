@@ -2,6 +2,8 @@
 
 
 
+Processing pixels near the edge requires special case code, but we don't really care too much exactly what is output for a couple of rows/columns of pixels at the edge, since those parts of the output image will usually be discarded during further stages of the movie-making process.
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.

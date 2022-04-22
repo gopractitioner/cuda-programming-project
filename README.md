@@ -13,7 +13,7 @@
 
 ## Your task: self-study CUDA programming and implement a simple CUDA program ##
 
-To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the [CUDA development toolkit] (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed, or you can use the Lab 2 machines where The CUDA development toolkit has already been installed in  ```/home/compx553/cuda```
+To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed, or you can use the Lab 2 machines where The CUDA development toolkit has already been installed in  ```/home/compx553/cuda```
 
 To use it, in your home directory open _.profile_ file (please note it is a hidden file, so you might need to switch on "show hidden files" to see it), and add the following lines to the end of file. Save the file and run ```source .profile``` 
 in a teminal.
@@ -29,23 +29,34 @@ export LD_LIBRARY_PATH=$CUDA_PATH/lib64
 Here are the resources I have used when studying CUDA programming and doing the project myself, which might help get you started.
 
 * basics: https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf
-* 
+* tutorials: https://cuda-tutorial.readthedocs.io/en/latest/tutorials/tutorial01/
+* a blog on how to use CUDA unified memory: https://developer.nvidia.com/blog/even-easier-introduction-cuda/
 
 ### Task Option 1 (5%)
 The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you upto 5/100 marks, so choose it ony when you run out of time or stuggle with the task option 2** 
 
 ### Task Option 2 (10%)
 
-The task is to implement the [Game of Life](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get on a GPU.
-
-A tempalte fiel 
+The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get on a GPU. A template file is provided to you.
 
 
 ### report ###
     
 
 
+## Grading for task option 1 (total 5 marks)
+
+|Marks|Allocated to|
+|-----|--------|
+|2 | implementaion|
+|3 | report | 
 
 
+## Grading for task option 2 (total 10 marks)
 
+|Marks|Allocated to|
+|-----|--------|
+|5 | implementaion|
+|2 | using local memory| 
+|3 | report | 
 

@@ -35,12 +35,16 @@ Here are the resources I have used when studying CUDA programming and doing the 
 * a blog on CUDA's execution and memory model: https://jhui.github.io/2017/03/06/CUDA/
 
 ### Task Option 1 (5%)
-The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you upto 5/100 marks, so choose it ony when you run out of time or stuggle with the task option 2** 
+The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you up to 5/100 marks, so choose it ony when you run out of time or struggle with the task option 2** 
 
 ### Task Option 2 (10%)
 
-The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get on a GPU. A template file is provided to you.
+The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get for a generaion run on GPU. You will need to run the CUDA GPU code for at least 10 generations and make sure the run time for each generatiton is roughly the same after the first generation. A template file is provided to you that contains code to produce the board for the first generation. I would suggest you implement the CPU version of a generation first, then migrate it to the GPU version. After the GPU code works properly, try cache a region of the board in shared memory to avoid repeated access to the global memory. See "sharing data between threads" from https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf for the reason of caching data, which Of course, does not always guarentee a decent speedup, however you will learn how to synchronize threads, which is covered in the OpenCL lectures.   
 
+Hints:
+* A generation is calculated on GPU at a time. 
+* You can use 2D arrays if you wish. This may make it easier for caching a region of the board using shared memory.
+* You can ignore the cells on the four edges of the board and assume they are all dead cells. 
 
 ### report ###
 you must also deliver a short report (i.e. a pdf document) that records the run time for each generation on CPU and GPU (only for option 2) and a table containing the mapping of OpenCL and CUDA terminologies as examples given below below. 

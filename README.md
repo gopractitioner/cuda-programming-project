@@ -43,14 +43,23 @@ The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/
 
 
 ### report ###
-    
+you must also deliver a short report (i.e. a pdf document) that records the run time for each generation on CPU and GPU (only for option 2) and a table that containing the mapping of OpenCL and CUDA terminologies as examples given below below. 
+
+
+|OpenCL|CUDA| Note |
+|-----|--------|-------------------|
+|work item | thread|
+|word group |  | |
+|word group |  | |     
+
+
 
 
 ## Grading for task option 1 (total 5 marks)
 
 |Marks|Allocated to|
 |-----|--------|
-|2 | implementaion|
+|2 | implementation|
 |3 | report | 
 
 
@@ -58,7 +67,7 @@ The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/
 
 |Marks|Allocated to|
 |-----|--------|
-|5 | implementaion|
+|5 | implementation|
 |2 | caching a region of cells using shared memory| 
 |3 | report | 
 

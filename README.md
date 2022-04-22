@@ -24,13 +24,24 @@ export PATH=$CUDA_PATH/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_PATH/lib64
 ```
 
+### Useful resources ###
+
+Here are the resources I have used when studying CUDA programming and doing the project myself, which might help get you started.
+
+* basics: https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf
+* 
+
 ### Task Option 1 (5%)
-Your task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, this option will only give you upto 5/100 marks, so only choose it when you run out of time or stuggle with the task option 2** 
+The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you upto 5/100 marks, so choose it ony when you run out of time or stuggle with the task option 2** 
 
 ### Task Option 2 (10%)
 
-Your task is to implement the [Game of Life](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get on a GPU.
+The task is to implement the [Game of Life](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) using CUDA, and to see how much speedup you can get on a GPU.
 
+A tempalte fiel 
+
+
+### report ###
     
 
 

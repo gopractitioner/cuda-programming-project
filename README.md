@@ -48,11 +48,14 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 
 |OpenCL|CUDA| Note |
 |-----|--------|-------------------|
-|work item | thread|
-|word group |  | |
-|word group |  | |     
-
-
+| __kernel__ | __global__ | CUDA uses the keyword __global__ to define a kernel|
+|work item | thread| |
+|word group | ... | |
+| compute unit | ... | |     
+| processing element | ... | |     
+| local memeory | ... | |     
+| ... | ... | |     
+| ... | ... | |     
 
 
 ## Grading for task option 1 (total 5 marks)

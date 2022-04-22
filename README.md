@@ -43,7 +43,7 @@ The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/
 
 
 ### report ###
-you must also deliver a short report (i.e. a pdf document) that records the run time for each generation on CPU and GPU (only for option 2) and a table that containing the mapping of OpenCL and CUDA terminologies as examples given below below. 
+you must also deliver a short report (i.e. a pdf document) that records the run time for each generation on CPU and GPU (only for option 2) and a table containing the mapping of OpenCL and CUDA terminologies as examples given below below. 
 
 
 |OpenCL|CUDA| Note |
@@ -53,7 +53,7 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 |word group | ... | |
 | compute unit | ... | |     
 | processing element | ... | |     
-| local memeory | ... | |     
+| local memory | ... | |     
 | ... | ... | |     
 | ... | ... | |     
 

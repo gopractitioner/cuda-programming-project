@@ -30,7 +30,9 @@ Here are the resources I have used when studying CUDA programming and doing the 
 
 * basics: https://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf
 * tutorials: https://cuda-tutorial.readthedocs.io/en/latest/tutorials/tutorial01/
+* CUDA programming guide: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
 * a blog on how to use CUDA unified memory: https://developer.nvidia.com/blog/even-easier-introduction-cuda/
+* a blog on CUDA's execution and memory model: https://jhui.github.io/2017/03/06/CUDA/
 
 ### Task Option 1 (5%)
 The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you upto 5/100 marks, so choose it ony when you run out of time or stuggle with the task option 2** 
@@ -57,6 +59,6 @@ The task is to implement the Conway's Game of Life(http://en.wikipedia.org/wiki/
 |Marks|Allocated to|
 |-----|--------|
 |5 | implementaion|
-|2 | using local memory| 
+|2 | caching a region of cells using shared memory| 
 |3 | report | 
 

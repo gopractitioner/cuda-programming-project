@@ -8,7 +8,6 @@
 * **Make sure that the visibility of your new repository (the one you just forked) is set to private.**
 * You can obtain the URL of your forked project by clicking the "Clone" button (beside "Fork") and then the “copy to clipboard icon" at the right of the dropdown.
 * Commit your changes regularly, providing an informative commit message(Commit and Changes Tutorial: https://www.jetbrains.com/help/idea/commit-and-push-changes.html)
-* You are expected to make at least 10 commits with messages to explain what have changed. 10 out of 50 marks are allocated for this. 
 
 
 ## Your task: self-study CUDA programming and implement a simple CUDA program ##
@@ -75,6 +74,6 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 |Marks|Allocated to|
 |-----|--------|
 |5 | implementation|
-|2 | caching a region of cells using shared memory| 
+|2 | caching a region of the board using shared memory| 
 |3 | report | 
 

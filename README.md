@@ -2,7 +2,7 @@
 
 **Due date Friday 17 June at 11:30 pm**
 
-**Please only fork this project if it is what you have chosen to do, otherwise we don't know which project to mark. **
+**Please only fork this project if it is what you have chosen to do, otherwise we don't know which project to mark.**
 
 ## Instruction and important things to note
 

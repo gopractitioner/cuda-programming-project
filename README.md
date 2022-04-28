@@ -67,7 +67,7 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 
 |Marks|Allocated to|
 |-----|--------|
-|0.5|comments and commits|
+|0.5|source code comments and commits|
 |1.5 | implementation|
 |3 | report | 
 
@@ -76,7 +76,7 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 
 |Marks|Allocated to|
 |-----|--------|
-|0.5| comments and commits|
+|0.5| source code comments and commits|
 |4.5 | implementation|
 |2 | caching a region of the board using shared memory| 
 |3 | report | 

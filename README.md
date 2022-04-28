@@ -81,3 +81,6 @@ you must also deliver a short report (i.e. a pdf document) that records the run 
 |2 | caching a region of the board using shared memory| 
 |3 | report | 
 
+## Submission
+
+Upload your soucre code and report to the repository.

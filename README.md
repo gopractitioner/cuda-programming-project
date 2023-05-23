@@ -14,7 +14,7 @@
 
 ## Your task: self-study CUDA programming and implement a simple CUDA program ##
 
-To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed, or you can use the Lab 2 machines where The CUDA development toolkit has already been installed in  ```/home/compx553/cuda```
+To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed, or you can use the Lab 2 machines where The CUDA development toolkit has already been installed in  ```/courses/compx553/cuda```
 
 To use it, in your home directory open _.profile_ file (please note it is a hidden file, so you might need to switch on "show hidden files" to see it), and add the following lines to the end of file. Save the file and run ```source .profile``` 
 in a terminal.

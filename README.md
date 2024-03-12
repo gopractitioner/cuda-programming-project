@@ -36,7 +36,7 @@ Here are the resources I have used when studying CUDA programming and doing the 
 * a blog on CUDA's execution and memory model: https://jhui.github.io/2017/03/06/CUDA/
 
 ### Task Option 1 (5%)
-The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you up to 5/100 marks, so choose it only when you run out of time or struggle with the task option 2** 
+The task is to reimplement the throwing darts assignment using CUDA and write a  brief report to map the terminologies used by OpenCL and CUDA. **Please note, you either choose this option or the option 2 below, NOT both. This option will only give you up to 50/100 marks, so choose it only when you run out of time or struggle with the task option 2** 
 
 ### Task Option 2 (10%)
 

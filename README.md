@@ -1,6 +1,6 @@
 # CUDA programming Project
 
-**Due date Friday 16 April at 11:30 pm**
+**Due date Friday 26 April at 11:30 pm**
 
 **Fork this project only if it is what you have chosen to do, otherwise we don't know which project to mark.**
 

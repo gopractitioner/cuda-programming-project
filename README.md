@@ -16,10 +16,10 @@
 
 To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed. Or you can use Google's colab. The following are the instructions for running cuda program on the colab's Jupyter Notebook
 
-** go to https://colab.google/
-** click new notebook
-** Runtime (the top menu) -> Change Runtime type -> T4 GPU -> save
-** In a cell of the note book, copy in the following code
+* go to https://colab.google/
+* click new notebook
+* Runtime (the top menu) -> Change Runtime type -> T4 GPU -> save
+* In a cell of the note book, copy in the following code
 ```
 %%writefile hello.cu
 
@@ -36,10 +36,10 @@ cudaDeviceReset();
 return 0;
 }
 ```
-** in the cell below, compile hello.cu, 
+* in the cell below, compile hello.cu, 
 ```!nvcc hello.cu -o hello```
-** in the cell below, run hello
-```!./hellonotebook.```
+* in the cell below, run hello
+```!./hello```
 
 
 ### Useful resources ###

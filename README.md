@@ -14,16 +14,33 @@
 
 ## Your task: self-study CUDA programming and implement a simple CUDA program ##
 
-To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed, or you can use the Lab 2 machines where The CUDA development toolkit has already been installed in  ```/courses/compx553/cuda```
+To develop and run a CUDA program, you will need to use a computer with NVIDIA GPUs and have the CUDA development toolkit (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) installed. Or you can use Google's colab. The following are the instructions for running cuda program on the colab's Jupyter Notebook
 
-To use it, in your home directory open _.profile_ file (please note it is a hidden file, so you might need to switch on "show hidden files" to see it), and add the following lines to the end of file. Save the file and run ```source .profile``` 
-in a terminal.
+** go to https://colab.google/
+** click new notebook
+** Runtime (the top menu) -> Change Runtime type -> T4 GPU -> save
+** In a cell of the note book, copy in the following code
+```
+%%writefile hello.cu
 
+#include<stdio.h>
+__global__ void hello(void)
+{
+printf("GPU: Hello!\n");
+}
+int main(int argc,char **argv)
+{
+printf("CPU: Hello!\n");
+hello<<<1,10>>>();
+cudaDeviceReset();
+return 0;
+}
 ```
-export CUDA_PATH=/home/compx553/cuda
-export PATH=$CUDA_PATH/bin:$PATH
-export LD_LIBRARY_PATH=$CUDA_PATH/lib64
-```
+** in the cell below, compile hello.cu, 
+```!nvcc hello.cu -o hello```
+** in the cell below, run hello
+```!./hellonotebook.```
+
 
 ### Useful resources ###
 

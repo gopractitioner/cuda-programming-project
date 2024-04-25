@@ -121,33 +121,62 @@ __global__ void nextGenerationGPU(bool* board, bool* next_board, int board_size)
 
 /**
 * Implemention of the GPU version using shared memory   
-*
+*Running a CUDA project in VSCode requires some initial setup, especially around build and debug configurations, but provides a powerful environment for developing GPU-accelerated applications.
 */
 __global__ void nextGenerationGPUSharedMemory(bool* board, bool* next_board, int board_size){
      
 }
 
-int main(void)
-{
-  int board_size = 1024; //2048,4096,8192,16384,32768
-  int print_range = 64;
-  bool *pre_board; 
-  bool *next_board;
-  
-  
+int main() {
 
-  for (int i=0; i<10;i++){
+    int board_size = 1024; // Adjust size as needed
+    int print_range = 64;
+    size_t bytes = board_size * board_size * sizeof(bool);
 
-      //run at least ten generations and measure the elapsed time for each generation
-      auto start = std::chrono::high_resolution_clock::now();
-       
-      //run one generation
+    // Host allocation
+    bool *pre_board = new bool[board_size * board_size];
+    bool *next_board = new bool[board_size * board_size];
 
-      auto end = std::chrono::high_resolution_clock::now();
-      auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
- 
-     }
+    // Device allocation
+    bool *d_pre_board, *d_next_board;
+    cudaMalloc(&d_pre_board, bytes);
+    cudaMalloc(&d_next_board, bytes);
 
-  return 0;
+    // Initialize boards on host or use any other init function
+    // Assuming init_board() fills `pre_board`
+    init_board(pre_board, board_size);
+
+    // Copy data from host to device
+    cudaMemcpy(d_pre_board, pre_board, bytes, cudaMemcpyHostToDevice);
+
+    // Define block and grid sizes
+    dim3 block(16, 16);  // Adjust block size as needed
+    dim3 grid((board_size + block.x - 1) / block.x, (board_size + block.y - 1) / block.y);
+
+    // Run kernel and measure time
+    auto start = std::chrono::high_resolution_clock::now();
+
+    nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+
+    cudaDeviceSynchronize(); // Wait for GPU to finish
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Elapsed time: " << milliseconds.count() << " ms" << std::endl;
+    print_board(pre_board, board_size, print_range);
+
+    // Copy results back to host
+    cudaMemcpy(next_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+
+
+
+    // clean memory
+    cudaFree(d_pre_board);
+    cudaFree(d_next_board);
+
+    delete[] pre_board;
+    delete[] next_board;
+
+    return 0;
 }
 

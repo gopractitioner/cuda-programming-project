@@ -43,12 +43,12 @@ void print_board(bool *board, int board_size, int range){
      }
      cout<<endl;
    }
-    
+   cout<<endl; 
 }
 
 /**
 *Implemention of the CPU version
-*Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+*Any live cell with fewer than two live neighbohttps://login.microsoftonline.com/220f5dc3-9452-48e5-9b4f-888df42f7a2d/saml2urs dies, as if by underpopulation.
 *Any live cell with two or three live neighbours lives on to the next generation.
 *Any live cell with more than three live neighbours dies, as if by overpopulation.
 *Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
@@ -101,9 +101,9 @@ int main()
         
         cout << "Time : Generation " << i << " took " << milliseconds.count() << " ms" << endl;
         
-        if (i < 1) {
-            print_board(pre_board, board_size, print_range);
-        }
+        
+        print_board(pre_board, board_size, print_range);
+        
     }
 
 

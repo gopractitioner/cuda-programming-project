@@ -106,6 +106,9 @@ int main()
         
     }
 
+    // clean memory
+    delete[] pre_board;
+    delete[] next_board;
 
     return 0;
 }

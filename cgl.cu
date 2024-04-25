@@ -85,7 +85,7 @@ void nextGeneration(bool* board, bool* next_board, int board_size){
               next_board[col + row * board_size] = current_cell;
       }
   }
-  
+
 }
 /**
 * Implemention of the GPU version without using shared memory
@@ -133,8 +133,8 @@ int main(void)
   int print_range = 64;
   bool *pre_board; 
   bool *next_board;
-
-   
+  
+  
 
   for (int i=0; i<10;i++){
 

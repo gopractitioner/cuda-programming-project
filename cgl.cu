@@ -60,19 +60,63 @@ void init_board(bool* board, int board_size){
 */
 void nextGeneration(bool* board, bool* next_board, int board_size){
      
-  for (int row = 1; row < board_size -1; row++) {
-     for(int col= 1; col < board_size -1; col++){           
+  // for (int row = 1; row < board_size -1; row++) {
+  //    for(int col= 1; col < board_size -1; col++){           
          
-        }
-     }
+  //       }
+  //    }
+  int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1};
+  int dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
 
+  for (int row = 1; row < board_size - 1; row++) {
+      for (int col = 1; col < board_size - 1; col++) {
+          int live_neighbors = 0;
+          for (int i = 0; i < 8; i++) {
+              int new_row = row + dy[i];
+              int new_col = col + dx[i];
+              live_neighbors += board[new_col + new_row * board_size];
+          }
+          bool current_cell = board[col + row * board_size];
+          if (current_cell && (live_neighbors < 2 || live_neighbors > 3))
+              next_board[col + row * board_size] = false;
+          else if (!current_cell && live_neighbors == 3)
+              next_board[col + row * board_size] = true;
+          else
+              next_board[col + row * board_size] = current_cell;
+      }
+  }
+  
 }
 /**
 * Implemention of the GPU version without using shared memory
 *
 */
 __global__ void nextGenerationGPU(bool* board, bool* next_board, int board_size){
+  int row = blockIdx.y * blockDim.y + threadIdx.y;
+  int col = blockIdx.x * blockDim.x + threadIdx.x;
 
+  if (row >= 1 && row < board_size - 1 && col >= 1 && col < board_size - 1) {
+      int live_neighbors = 0;
+
+      // Check all eight neighbors
+      for (int y = -1; y <= 1; y++) {
+          for (int x = -1; x <= 1; x++) {
+              if (x == 0 && y == 0) continue;
+              live_neighbors += board[(row + y) * board_size + (col + x)];
+          }
+      }
+
+      bool current_cell = board[row * board_size + col];
+      bool next_cell = current_cell;
+
+      if (current_cell && (live_neighbors < 2 || live_neighbors > 3))
+          next_cell = false; // Cell dies
+      else if (!current_cell && live_neighbors == 3)
+          next_cell = true; // Cell becomes alive
+
+      next_board[row * board_size + col] = next_cell;
+  }
+  
 }
 
 /**

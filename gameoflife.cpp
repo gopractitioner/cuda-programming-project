@@ -6,12 +6,44 @@
 using std::cout; using std::endl;
 
 
+
+/**
+* initialize a board array of board_size*board_size on the host
+*
+*/
 void init_board(bool* board, int board_size){
+  //starts with a simple pattern at the left corner region (0,0) to (range, range)
+  int range = 128;
+  //use a fixed seed for the same board pattern 
+  srand(1);
+  //get system time in seconds and use it as the random seed for different board patterns       
+  //auto sec_since_epoch = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+  //srand(sec_since_epoch);
+  for (int row = 1; row < board_size -1; row++) {
+     for(int col= 1; col < board_size -1; col++){
+         if(row < range && col < range){
+               board[col + row * board_size] = rand()%2;
+               continue;                      
+        }
+       board[col + row * board_size] = 0;
+     }
+  }
 }
 
 
-
+/**
+* range: the maximum of rows and columns of the board to print 
+*/
 void print_board(bool *board, int board_size, int range){
+   cout << endl;
+   for (int row = 0; row < range && row < board_size; row++) {
+     for(int col=0; col < range && col < board_size; col++){
+           cout << board[col + row*board_size];
+
+     }
+     cout<<endl;
+   }
+    
 }
 
 

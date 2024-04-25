@@ -125,7 +125,62 @@ __global__ void nextGenerationGPU(bool* board, bool* next_board, int board_size)
 *Running a CUDA project in VSCode requires some initial setup, especially around build and debug configurations, but provides a powerful environment for developing GPU-accelerated applications.
 */
 __global__ void nextGenerationGPUSharedMemory(bool* board, bool* next_board, int board_size){
-     
+         // Define the size of the shared memory block, including the halo
+    const int blockSize = blockDim.x;  // Assume square blocks and grid
+    const int haloSize = 1;
+    const int sharedSize = blockSize + 2 * haloSize;
+
+    // Shared memory allocation
+    extern __shared__ bool sharedBoard[];
+
+    int localRow = threadIdx.y + haloSize;
+    int localCol = threadIdx.x + haloSize;
+    int globalRow = blockIdx.y * blockDim.y + threadIdx.y;
+    int globalCol = blockIdx.x * blockDim.x + threadIdx.x;
+
+    // Load cells into shared memory including halo
+    if (globalRow < board_size && globalCol < board_size) {
+        sharedBoard[localRow * sharedSize + localCol] = board[globalRow * board_size + globalCol];
+
+        // Load halo cells
+        if (threadIdx.x == 0 && globalCol > 0) { // Left halo
+            sharedBoard[localRow * sharedSize] = board[globalRow * board_size + globalCol - 1];
+        }
+        if (threadIdx.x == blockDim.x - 1 && globalCol < board_size - 1) { // Right halo
+            sharedBoard[localRow * sharedSize + localCol + 1] = board[globalRow * board_size + globalCol + 1];
+        }
+        if (threadIdx.y == 0 && globalRow > 0) { // Top halo
+            sharedBoard[(localRow - 1) * sharedSize + localCol] = board[(globalRow - 1) * board_size + globalCol];
+        }
+        if (threadIdx.y == blockDim.y - 1 && globalRow < board_size - 1) { // Bottom halo
+            sharedBoard[(localRow + 1) * sharedSize + localCol] = board[(globalRow + 1) * board_size + globalCol];
+        }
+    }
+
+    __syncthreads();
+
+    // Compute the next generation for cells not on the boundary of the grid
+    if (globalRow >= 1 && globalRow < board_size - 1 && globalCol >= 1 && globalCol < board_size - 1) {
+        int live_neighbors = 0;
+
+        // Check all eight neighbors
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                if (x == 0 && y == 0) continue;
+                live_neighbors += sharedBoard[(localRow + y) * sharedSize + (localCol + x)];
+            }
+        }
+
+        bool current_cell = sharedBoard[localRow * sharedSize + localCol];
+        bool next_cell = current_cell;
+
+        if (current_cell && (live_neighbors < 2 || live_neighbors > 3))
+            next_cell = false; // Cell dies
+        else if (!current_cell && live_neighbors == 3)
+            next_cell = true; // Cell becomes alive
+
+        next_board[globalRow * board_size + globalCol] = next_cell;
+    }
 }
 
 int main() {
@@ -167,26 +222,52 @@ int main() {
     // print_board(pre_board, board_size, print_range);
 
 
+    // run nextGenerationGPU 10 times 
+    // for (int i = 0; i < 10; i++) {
+    //   auto start = std::chrono::high_resolution_clock::now();
+    //   nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+    //   //nextGenerationGPUSharedMemory<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+    //   cudaDeviceSynchronize();
+    //   auto end = std::chrono::high_resolution_clock::now();
+
+    //   // Copy results back to host 
+    //   cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+
+    //   std::cout << "\nGeneration " << i + 1 << endl;
+
+    //   auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //   auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+
+    //   //std::cout << "Time length: " << microseconds.count() * 10000000<< " microseconds";
+    //   std::cout << "Time length: " << nanoseconds.count() << " nanoseconds";
+
+    //   print_board(pre_board, board_size, print_range);
+
+    //   std::swap(d_pre_board, d_next_board);
+
+    // }
+
+    // run nextGenerationGPUSharedMemory 10 times 
+    int halo = 1;
+    int shared_mem_size = (block.x + 2 * halo) * (block.y + 2 * halo) * sizeof(bool);
 
     for (int i = 0; i < 10; i++) {
-      auto start = std::chrono::high_resolution_clock::now();
-      nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-      cudaDeviceSynchronize();
-      auto end = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
+        nextGenerationGPUSharedMemory<<<grid, block, shared_mem_size>>>(d_pre_board, d_next_board, board_size);
+        cudaDeviceSynchronize();
+        auto end = std::chrono::high_resolution_clock::now();
 
-      // Copy results back to host 
-      cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+        cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
 
-      std::cout << "\nGeneration " << i + 1 << endl;
+        std::cout << "\nGeneration " << i + 1 << std::endl;
 
-      auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-      std::cout << "Time length: " << microseconds.count() << " microseconds";
+        auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        std::cout << "Time : " << nanoseconds.count() << " nanoseconds" << std::endl;
 
-      print_board(pre_board, board_size, print_range);
+        print_board(pre_board, board_size, print_range);
 
-      std::swap(d_pre_board, d_next_board);
-
-  }
+        std::swap(d_pre_board, d_next_board);
+    }
 
 
 

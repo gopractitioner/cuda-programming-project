@@ -3,6 +3,7 @@
 #include <chrono>
 #include <sys/time.h>
 #include <ctime>
+#include <cuda_runtime.h>
 
 
 using std::cout; using std::endl;
@@ -153,20 +154,45 @@ int main() {
     dim3 block(16, 16);  // Adjust block size as needed
     dim3 grid((board_size + block.x - 1) / block.x, (board_size + block.y - 1) / block.y);
 
-    // Run kernel and measure time
-    auto start = std::chrono::high_resolution_clock::now();
+    // // Run kernel and measure time
+    // auto start = std::chrono::high_resolution_clock::now();
 
-    nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+    // nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
 
-    cudaDeviceSynchronize(); // Wait for GPU to finish
+    // cudaDeviceSynchronize(); // Wait for GPU to finish
 
-    auto end = std::chrono::high_resolution_clock::now();
-    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Elapsed time: " << milliseconds.count() << " ms" << std::endl;
-    print_board(pre_board, board_size, print_range);
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    // std::cout << "time: " << milliseconds.count() << " ms" << std::endl;
+    // print_board(pre_board, board_size, print_range);
+
+
+
+    for (int i = 0; i < 10; i++) {
+      auto start = std::chrono::high_resolution_clock::now();
+      nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+      cudaDeviceSynchronize();
+      auto end = std::chrono::high_resolution_clock::now();
+
+      // Copy results back to host 
+      cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+
+      std::cout << "\nGeneration " << i + 1 << endl;
+
+      auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+      std::cout << "Time length: " << microseconds.count() << " microseconds";
+
+      print_board(pre_board, board_size, print_range);
+
+      std::swap(d_pre_board, d_next_board);
+
+  }
+
+
+
 
     // Copy results back to host
-    cudaMemcpy(next_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+    //cudaMemcpy(next_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
 
 
 

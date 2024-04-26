@@ -25,12 +25,26 @@ void init_board(bool* board, int board_size){
                board[col + row * board_size] = rand()%2;
                continue;                      
         }
-       board[col + row * board_size] = 0;
+        board[col + row * board_size] = 0;
      }
   }
 }
 
-
+void test_init_board(bool* board, int board_size){
+    int test_board[64] = {
+        0, 0, 0, 0, 0, 0, 0, 0,    // 00000000
+        0, 1, 0, 1, 1, 1, 1, 0,    // 01011110
+        0, 0, 0, 1, 1, 0, 1, 0,    // 00011010
+        0, 0, 1, 1, 0, 0, 0, 0,    // 00110000
+        0, 0, 0, 1, 0, 1, 1, 0,    // 00010110
+        0, 0, 0, 0, 1, 1, 1, 0,    // 00001110
+        0, 1, 0, 0, 0, 1, 1, 0,    // 01000110
+        0, 0, 0, 0, 0, 0, 0, 0    // 00000000
+    };
+    for (int i = 0; i < 64; i++) {
+        board[i] = test_board[i];
+    }
+}
 /**
 * range: the maximum of rows and columns of the board to print 
 */
@@ -58,6 +72,8 @@ void nextGeneration(bool* board, bool* next_board, int board_size){
     int dx[8] = {0, 0, 1, -1, 1, 1, -1, -1};
     int dy[8] = {1, -1, 0, 0, 1, -1, 1, -1};
   
+
+
     for (int row = 1; row < board_size - 1; row++) {
         for (int col = 1; col < board_size - 1; col++) {
             int live_neighbors = 0;
@@ -79,12 +95,17 @@ void nextGeneration(bool* board, bool* next_board, int board_size){
 
 int main()
 {
-    int board_size = 1024;
-    int print_range = 64;
+    int board_size = 8;
+    int print_range = 8;
     bool *pre_board = new bool[board_size * board_size];
     bool *next_board = new bool[board_size * board_size];
 
-    init_board(pre_board, board_size);
+    //init_board(pre_board, board_size);
+    
+    test_init_board(pre_board, board_size);
+
+    print_board(pre_board, board_size, print_range);
+
 
     // run at least ten generations and measure the time for each generation
     for (int i = 0; i < 10; i++){
@@ -99,7 +120,7 @@ int main()
         auto end = std::chrono::high_resolution_clock::now();
         auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         
-        cout << "Time : Generation " << i << " took " << milliseconds.count() << " ms" << endl;
+        cout << "Time : Generation " << i+1 << " took " << milliseconds.count() << " ms" << endl;
         
         
         print_board(pre_board, board_size, print_range);

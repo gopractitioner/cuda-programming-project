@@ -50,7 +50,24 @@ void init_board(bool* board, int board_size){
      }
   }
 }
-
+/*
+test
+*/
+void test_init_board(bool* board, int board_size){
+    int test_board[64] = {
+        0, 0, 0, 0, 0, 0, 0, 0,    // 00000000
+        0, 1, 0, 1, 1, 1, 1, 0,    // 01011110
+        0, 0, 0, 1, 1, 0, 1, 0,    // 00011010
+        0, 0, 1, 1, 0, 0, 0, 0,    // 00110000
+        0, 0, 0, 1, 0, 1, 1, 0,    // 00010110
+        0, 0, 0, 0, 1, 1, 1, 0,    // 00001110
+        0, 1, 0, 0, 0, 1, 1, 0,    // 01000110
+        0, 0, 0, 0, 0, 0, 0, 0    // 00000000
+    };
+    for (int i = 0; i < 64; i++) {
+        board[i] = test_board[i];
+    }
+}
 /**
 *Implemention of the CPU version
 *Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -143,7 +160,8 @@ __global__ void nextGenerationGPUSharedMemory(bool* board, bool* next_board, int
         sharedBoard[localRow * sharedSize + localCol] = board[globalRow * board_size + globalCol];
 
         // Load halo cells
-        if (threadIdx.x == 0 && globalCol > 0) { // Left halo
+        if (threadIdx.x == 0 && globalCol > 0) { // Left halo       board[col + row * board_size] = 0;
+
             sharedBoard[localRow * sharedSize] = board[globalRow * board_size + globalCol - 1];
         }
         if (threadIdx.x == blockDim.x - 1 && globalCol < board_size - 1) { // Right halo
@@ -185,8 +203,8 @@ __global__ void nextGenerationGPUSharedMemory(bool* board, bool* next_board, int
 
 int main() {
 
-    int board_size = 1024; // Adjust size as needed
-    int print_range = 64;
+    int board_size = 8; // Adjust size as needed 32000
+    int print_range = 8;
     size_t bytes = board_size * board_size * sizeof(bool);
 
     // Host allocation
@@ -200,7 +218,14 @@ int main() {
 
     // Initialize boards on host or use any other init function
     // Assuming init_board() fills `pre_board`
-    init_board(pre_board, board_size);
+    
+    
+    //init_board(pre_board, board_size);
+
+    test_init_board(pre_board, board_size);
+
+    print_board(pre_board, board_size, print_range);
+
 
     // Copy data from host to device
     cudaMemcpy(d_pre_board, pre_board, bytes, cudaMemcpyHostToDevice);
@@ -223,51 +248,51 @@ int main() {
 
 
     // run nextGenerationGPU 10 times 
-    // for (int i = 0; i < 10; i++) {
-    //   auto start = std::chrono::high_resolution_clock::now();
-    //   nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-    //   //nextGenerationGPUSharedMemory<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-    //   cudaDeviceSynchronize();
-    //   auto end = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+      auto start = std::chrono::high_resolution_clock::now();
+      nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+      //nextGenerationGPUSharedMemory<<<grid, block>>>(d_pre_board, d_next_board, board_size);
+      cudaDeviceSynchronize();
+      auto end = std::chrono::high_resolution_clock::now();
 
-    //   // Copy results back to host 
-    //   cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+      // Copy results back to host 
+      cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
 
-    //   std::cout << "\nGeneration " << i + 1 << endl;
+      std::cout << "\nGeneration " << i + 1 << endl;
 
-    //   auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    //   auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+      auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+      auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
-    //   //std::cout << "Time length: " << microseconds.count() * 10000000<< " microseconds";
-    //   std::cout << "Time length: " << nanoseconds.count() << " nanoseconds";
+      //std::cout << "Time length: " << microseconds.count() * 10000000<< " microseconds";
+      std::cout << "Time length: " << nanoseconds.count() << " nanoseconds";
 
-    //   print_board(pre_board, board_size, print_range);
+      print_board(pre_board, board_size, print_range);
 
-    //   std::swap(d_pre_board, d_next_board);
+      std::swap(d_pre_board, d_next_board);
 
-    // }
+    }
 
     // run nextGenerationGPUSharedMemory 10 times 
-    int halo = 1;
-    int shared_mem_size = (block.x + 2 * halo) * (block.y + 2 * halo) * sizeof(bool);
+    // int halo = 1;
+    // int shared_mem_size = (block.x + 2 * halo) * (block.y + 2 * halo) * sizeof(bool);
 
-    for (int i = 0; i < 10; i++) {
-        auto start = std::chrono::high_resolution_clock::now();
-        nextGenerationGPUSharedMemory<<<grid, block, shared_mem_size>>>(d_pre_board, d_next_board, board_size);
-        cudaDeviceSynchronize();
-        auto end = std::chrono::high_resolution_clock::now();
+    // for (int i = 0; i < 10; i++) {
+    //     auto start = std::chrono::high_resolution_clock::now();
+    //     nextGenerationGPUSharedMemory<<<grid, block, shared_mem_size>>>(d_pre_board, d_next_board, board_size);
+    //     cudaDeviceSynchronize();
+    //     auto end = std::chrono::high_resolution_clock::now();
 
-        cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
 
-        std::cout << "\nGeneration " << i + 1 << std::endl;
+    //     std::cout << "\nGeneration " << i + 1 << std::endl;
 
-        auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-        std::cout << "Time : " << nanoseconds.count() << " nanoseconds" << std::endl;
+    //     auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    //     std::cout << "Time : " << nanoseconds.count() << " nanoseconds" << std::endl;
 
-        print_board(pre_board, board_size, print_range);
+    //     print_board(pre_board, board_size, print_range);
 
-        std::swap(d_pre_board, d_next_board);
-    }
+    //     std::swap(d_pre_board, d_next_board);
+    // }
 
 
 

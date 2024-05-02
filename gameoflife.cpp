@@ -30,6 +30,20 @@ void init_board(bool* board, int board_size){
   }
 }
 
+void test2(bool* board, int board_size){
+    // Manually initialize the board with first 4 rows as 1's and next 4 as 0's
+for (int row = 0; row < board_size; row++) {
+for (int col = 0; col < board_size; col++) {
+if (row < 32) { // First 4 rows as 1's
+board[col + row * board_size] = true;
+} else { // Next 4 rows as 0's
+board[col + row * board_size] = false;
+}
+}
+}
+}
+
+
 void test_init_board(bool* board, int board_size){
     int test_board[64] = {
         0, 0, 0, 0, 0, 0, 0, 0,    // 00000000
@@ -95,14 +109,14 @@ void nextGeneration(bool* board, bool* next_board, int board_size){
 
 int main()
 {
-    int board_size = 8;
-    int print_range = 8;
+    int board_size = 1024;
+    int print_range = 64;
     bool *pre_board = new bool[board_size * board_size];
     bool *next_board = new bool[board_size * board_size];
 
     //init_board(pre_board, board_size);
     
-    test_init_board(pre_board, board_size);
+    test2(pre_board, board_size);
 
     print_board(pre_board, board_size, print_range);
 

@@ -218,110 +218,39 @@ __global__ void nextGenerationGPUSharedMemory(bool* board, bool* next_board, int
 
 int main() {
 
-    int board_size = 1024; // Adjust size as needed 32000
+    int board_size = 1024;
     int print_range = 64;
-    size_t bytes = board_size * board_size * sizeof(bool);
-
-    // Host allocation
     bool *pre_board = new bool[board_size * board_size];
     bool *next_board = new bool[board_size * board_size];
 
-    // Device allocation
-    bool *d_pre_board, *d_next_board;
-    cudaMalloc(&d_pre_board, bytes);
-    cudaMalloc(&d_next_board, bytes);
-
-    // Initialize boards on host or use any other init function
-    // Assuming init_board() fills `pre_board`
-    
-    
     //init_board(pre_board, board_size);
+    
+    test2(pre_board, board_size);
 
-    //test_init_board(pre_board, board_size);
-    init_board(pre_board, board_size);
-    cout << "Initial board" << endl;
     print_board(pre_board, board_size, print_range);
 
 
-    // Copy data from host to device
-    cudaMemcpy(d_pre_board, pre_board, bytes, cudaMemcpyHostToDevice);
-
-    // Define block and grid sizes
-    dim3 block(16, 16);  // Adjust block size as needed
-    dim3 grid((board_size + block.x - 1) / block.x, (board_size + block.y - 1) / block.y);
-
-    // // Run kernel and measure time
-    // auto start = std::chrono::high_resolution_clock::now();
-
-    // nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-
-    // cudaDeviceSynchronize(); // Wait for GPU to finish
-
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    // std::cout << "time: " << milliseconds.count() << " ms" << std::endl;
-    // print_board(pre_board, board_size, print_range);
-
-
-    // run nextGenerationGPU 10 times 
-    for (int i = 0; i < 10; i++) {
-      auto start = std::chrono::high_resolution_clock::now();
-      nextGenerationGPU<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-      //nextGenerationGPUSharedMemory<<<grid, block>>>(d_pre_board, d_next_board, board_size);
-      cudaDeviceSynchronize();
-      auto end = std::chrono::high_resolution_clock::now();
-
-      // Copy results back to host 
-      cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
-
-      std::cout << "\nGeneration " << i + 1 << endl;
-
-      auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-      auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-
-      //std::cout << "Time length: " << microseconds.count() * 10000000<< " microseconds";
-      std::cout << "Time length: " << nanoseconds.count() << " nanoseconds";
-
-      print_board(pre_board, board_size, print_range);
-
-      std::swap(d_pre_board, d_next_board);
-
+    // run at least ten generations and measure the time for each generation
+    for (int i = 0; i < 10; i++){
+        auto start = std::chrono::high_resolution_clock::now();
+        
+        // Run one generation on CPU
+        nextGeneration(pre_board, next_board, board_size);
+        
+        // Swap the boards for the next iteration
+        std::swap(pre_board, next_board);
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        
+        cout << "Time : Generation " << i+1 << " took " << nanoseconds.count() << " nanoseconds" << endl;
+        
+        
+        print_board(pre_board, board_size, print_range);
+        
     }
 
-    // run nextGenerationGPUSharedMemory 10 times 
-    // int halo = 1;
-    // int shared_mem_size = (block.x + 2 * halo) * (block.y + 2 * halo) * sizeof(bool);
-
-    // for (int i = 0; i < 10; i++) {
-    //     auto start = std::chrono::high_resolution_clock::now();
-    //     nextGenerationGPUSharedMemory<<<grid, block, shared_mem_size>>>(d_pre_board, d_next_board, board_size);
-    //     cudaDeviceSynchronize();
-    //     auto end = std::chrono::high_resolution_clock::now();
-
-    //     cudaMemcpy(pre_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
-
-    //     std::cout << "\nSharedMemory Generation " << i + 1 << std::endl;
-
-    //     auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    //     std::cout << "Time : " << nanoseconds.count() << " nanoseconds" << std::endl;
-
-    //     print_board(pre_board, board_size, print_range);
-
-    //     std::swap(d_pre_board, d_next_board);
-    // } 
-
-
-
-
-    // Copy results back to host
-    //cudaMemcpy(next_board, d_next_board, bytes, cudaMemcpyDeviceToHost);
-
-
-
     // clean memory
-    cudaFree(d_pre_board);
-    cudaFree(d_next_board);
-
     delete[] pre_board;
     delete[] next_board;
 

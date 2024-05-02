@@ -237,7 +237,7 @@ int main() {
     // 10
     
     init_board(pre_board, board_size);
-    cout << "Initial board" << endl;
+    cout << "Initial board";
     //test_init_board(pre_board, board_size);
     //test2 (pre_board, board_size);
     print_board(pre_board, board_size, print_range);

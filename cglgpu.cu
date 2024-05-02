@@ -239,7 +239,7 @@ int main() {
 
     //test_init_board(pre_board, board_size);
     init_board(pre_board, board_size);
-    cout << "Initial board" << endl;
+    cout << "Initial board";
     print_board(pre_board, board_size, print_range);
 
 
